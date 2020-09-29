@@ -101,8 +101,8 @@ app.get('/', (request, response) => {
 module.exports = {
   "development": {
     "username": process.env.MYSQL_USER,
-    "password": process.env.MYSQL_PASSWORD, 
-    "database": 'blogs_api', 
+    "password": process.env.MYSQL_PASSWORD,
+    "database": 'blogs_api',
     "host": process.env.HOSTNAME,
     "dialect": 'mysql',
   },
