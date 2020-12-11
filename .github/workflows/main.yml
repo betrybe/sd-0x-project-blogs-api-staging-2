@@ -35,7 +35,7 @@ jobs:
           MYSQL_PASSWORD: 'password'
           HOSTNAME: 'mysql'
       - name: Store evaluation step
-        uses: betrybe/store-evaluation-action@v2
+        uses: betrybe/store-evaluation-action@v2.1
         with:
           evaluation-data: ${{ steps.evaluator.outputs.result }}
           environment: staging
