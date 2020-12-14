@@ -1,5 +1,14 @@
 const { Op } = require('sequelize');
 
+const reducePosts = (posts) =>
+  posts.reduce((acc, { dataValues }) => {
+    const filterPost = {
+      ...dataValues,
+      user: dataValues.user.dataValues,
+    };
+    return [...acc, filterPost];
+  }, []);
+
 const createPost = (models) => async ({ title, content, userId }) => {
   console.log(title, content, userId);
   const post = await models.Post.create({
@@ -19,13 +28,7 @@ const getAll = (models) => async () => {
       as: 'user',
     },
   });
-  return posts.reduce((acc, { dataValues }) => {
-    const filterPost = {
-      ...dataValues,
-      user: dataValues.user.dataValues,
-    };
-    return [...acc, filterPost];
-  }, []);
+  return reducePosts(posts);
 };
 
 const getById = (models) => async (id) => {
@@ -56,24 +59,16 @@ const deletePost = (models) => async (id) =>
   models.Post.destroy({ where: { id } });
 
 const searchPost = (models) => async (query) => {
-  const posts = await models.Post.findAll(
-    { include: { model: models.User, as: 'user' },
-      where: {
-        [Op.or]: [
-          { title: { [Op.like]: `%${query}%` } },
-          { content: { [Op.like]: `%${query}%` } },
-        ],
-      },
+  const posts = await models.Post.findAll({
+    include: { model: models.User, as: 'user' },
+    where: {
+      [Op.or]: [
+        { title: { [Op.like]: `%${query}%` } },
+        { content: { [Op.like]: `%${query}%` } },
+      ],
     },
-
-  );
-  return posts.reduce((acc, { dataValues }) => {
-    const filterPost = {
-      ...dataValues,
-      user: dataValues.user.dataValues,
-    };
-    return [...acc, filterPost];
-  }, []);
+  });
+  return reducePosts(posts);
 };
 
 const postService = (models) => ({
