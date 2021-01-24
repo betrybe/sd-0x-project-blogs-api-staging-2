@@ -14,9 +14,7 @@ router.post('/', async (req, res) => {
     const response = await userService.createUser(displayName, email, password, image);
 
     if (response.success === true) return res.status(StatusCodes.CREATED).json(response.content);
-
-    const responseError = authResponse.content.message.length === 1 ? authResponse.content.message[0] : authResponse.content.message;
-    return res.status(StatusCodes.BAD_REQUEST).json({ message: responseError });
+    return res.status(StatusCodes.BAD_REQUEST).json({ message: response.content });
   } catch (error) {
     logger.error(error);
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Ocorreu um erro não esperado' });
