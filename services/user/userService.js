@@ -1,3 +1,1 @@
-const userExists = (userRepository) => (email, password) => {
-    return false;
-}
+const userExists = (userRepository) => (email, password) => false;
