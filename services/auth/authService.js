@@ -20,7 +20,7 @@ const validateLoginIputs = (email, password) => {
 
   if (password === undefined) errors.push('"password" is required');
 
-  if (password === '') errors.push('"pasword" is not allowed to be empty');
+  if (password === '') errors.push('"password" is not allowed to be empty');
 
   return errors;
 };

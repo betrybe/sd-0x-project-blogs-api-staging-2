@@ -23,4 +23,14 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.get('/:id', authMiddleware, async (req, res) => {
+  const userService = userFactory.generateInstance();
+  const userId = req.params.id;
+  const userResponse = await await userService.getUserbyId(userId);
+  if (userResponse.success === true)
+    return res.status(StatusCodes.OK).json(userResponse.content);
+  return res.status(StatusCodes.NOT_FOUND).json(userResponse.content);
+
+})
+
 module.exports = router;

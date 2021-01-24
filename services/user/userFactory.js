@@ -7,6 +7,7 @@ const generateInstance = () => {
   return {
     userExists: userService.userExists(userRepository),
     createUser: userService.createUser(userRepository, jwtService),
+    getUserbyId: userService.getUserbyId(userRepository)
   };
 };
 
