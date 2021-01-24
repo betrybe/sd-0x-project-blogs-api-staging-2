@@ -10,7 +10,7 @@ router.post('/', async (req, res) => {
   const { email, password } = req.body;
   const authResponse = await authService.authenticateUser(email, password);
 
-  if (authResponse.sucess === true) return res.status(StatusCodes.OK).json(authResponse.content);
+  if (authResponse.success === true) return res.status(StatusCodes.OK).json(authResponse.content);
 
   const responseError = authResponse.content.message.length === 1 ? authResponse.content.message[0] : authResponse.content.message;
   return res.status(StatusCodes.BAD_REQUEST).json({ message: responseError });

@@ -8,4 +8,4 @@ const generateInstance = () => {
   };
 };
 
-module.exports = generateInstance;
+module.exports = { generateInstance };
