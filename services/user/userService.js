@@ -36,7 +36,7 @@ const getUserbyId = (userRepository) => async (userId) => {
 }
 
 const userExists = (userRepository) => async (email, password) => {
-  const user = await userRepository.findOne({
+  return await userRepository.findOne({
     where: {
       [Op.and]: [
         { email: email.toLowerCase() },
@@ -44,9 +44,11 @@ const userExists = (userRepository) => async (email, password) => {
       ],
     },
   });
-
-  return user !== null;
 };
+
+const deleteUser = (userRepository) => async (userId) => {
+  await userRepository.destroy({ where: { id: userId } });
+}
 
 const userValidations = {
   displayName: {
@@ -60,4 +62,4 @@ const userValidations = {
   },
 };
 
-module.exports = { userExists, createUser, getUserbyId, getAllUsers };
+module.exports = { userExists, createUser, getUserbyId, getAllUsers, deleteUser };

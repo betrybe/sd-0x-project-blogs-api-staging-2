@@ -1,10 +1,10 @@
 const express = require('express');
-
 const router = express.Router();
 const { StatusCodes } = require('http-status-codes');
 const userFactory = require('../services/user/userFactory');
 const logger = require('../server/logger');
 const authMiddleware = require('../middlewares/authMiddleware');
+const { getUserId } = require('../services/token')
 
 router.post('/', async (req, res) => {
   try {
@@ -39,6 +39,15 @@ router.get('/:id', authMiddleware, async (req, res) => {
     return res.status(StatusCodes.OK).json(userResponse.content);
   return res.status(StatusCodes.NOT_FOUND).json(userResponse.content);
 
+})
+
+router.delete("/me", authMiddleware, async (req, res) => {
+  const userService = userFactory.generateInstance();
+  const token = req.headers.authorization;
+  const userId = getUserId(token);
+  await userService.deleteUser(userId)
+
+  res.status(StatusCodes.NO_CONTENT).send();
 })
 
 module.exports = router;

@@ -8,7 +8,8 @@ const generateInstance = () => {
     userExists: userService.userExists(userRepository),
     createUser: userService.createUser(userRepository, jwtService),
     getUserbyId: userService.getUserbyId(userRepository),
-    getAllUsers: userService.getAllUsers(userRepository)
+    getAllUsers: userService.getAllUsers(userRepository),
+    deleteUser: userService.deleteUser(userRepository)
   };
 };
 
