@@ -4,11 +4,12 @@ const TOKEN_SECRET = process.env.TOKEN_SECRET || 'VF^6e7k2^5N@';
 
 const authenticateUser = (userService) => async (email, password) => {
   const validationErros = validateLoginIputs(email, password);
-
   if (validationErros.length !== 0) return generateResponse(false, { message: validationErros });
 
-  const loginAndPasswordAreCorrect = await userService.loginAndPasswordAreCorrect(email, password);
-  if (loginAndPasswordAreCorrect) return generateResponse(true, { token: generateJwt('', '') });
+  const loginAndPasswordAreCorrect = await userService.userExists(email, password);
+  if (loginAndPasswordAreCorrect) {
+    return generateResponse(true, { token: generateJwt('', '') });
+  }
   return generateResponse(false, { message: 'Campos inválidos' });
 };
 
