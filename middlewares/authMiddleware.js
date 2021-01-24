@@ -1,5 +1,6 @@
 const { StatusCodes } = require('http-status-codes');
-const { tokenIsValid } = require("../services/token")
+const { tokenIsValid } = require('../services/token');
+
 const authMiddleware = (request, response, next) => {
   const token = request.headers.authorization;
 

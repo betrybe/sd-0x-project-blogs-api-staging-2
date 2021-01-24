@@ -1,4 +1,4 @@
-const generateResponse = require("../shared/serviceResponse")
+const generateResponse = require('../shared/serviceResponse');
 
 const authenticateUser = (userService, jwtService) => async (email, password) => {
   const validationErros = validateLoginIputs(email, password);
@@ -10,7 +10,6 @@ const authenticateUser = (userService, jwtService) => async (email, password) =>
   }
   return generateResponse(false, { message: 'Campos inválidos' });
 };
-
 
 const validateLoginIputs = (email, password) => {
   const errors = [];
