@@ -10,10 +10,12 @@ router.post('/', async (req, res) => {
   try {
     const userService = userFactory.generateInstance();
     const { displayName, email, password, image } = req.body;
-
     const response = await userService.createUser(displayName, email, password, image);
 
-    if (response.success === true) return res.status(StatusCodes.CREATED).json(response.content);
+    if (response.success === true) return res.status(StatusCodes.CREATED).json({ token: response.content });
+    if (response.content === "Usuário já existe")
+      return res.status(StatusCodes.CONFLICT).json({ message: response.content });
+
     return res.status(StatusCodes.BAD_REQUEST).json({ message: response.content });
   } catch (error) {
     logger.error(error);

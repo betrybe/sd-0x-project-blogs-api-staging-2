@@ -1,17 +1,22 @@
 const validate = require('validate.js');
 const { Op } = require('sequelize');
 const { generateResponse, generateResponseUsingValidation } = require('../shared/serviceResponse');
+const { generateJwt } = require("../token")
 
 const createUser = (userRepository, jwtService) => async (displayName, email, password, image) => {
   const userData = { displayName, email: email?.toLowerCase() ?? undefined, password, image };
   const validationResult = validate(userData, userValidations)
-
   if (validationResult !== undefined)
     return generateResponseUsingValidation(validationResult);
 
-  const user = await userRepository.create(userData);
-  user.password = '';
-  return generateResponse(true, user);
+  try {
+    const user = await userRepository.create(userData);
+    return generateResponse(true, generateJwt(user.id, user.displayName));
+  } catch (error) {
+    if (error.name === 'SequelizeUniqueConstraintError')
+      return generateResponse(false, 'Usuário já existe');
+    throw error;
+  }
 };
 
 const userExists = (userRepository) => async (email, password) => {
