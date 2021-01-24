@@ -1,8 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+
 const userController = require('./controllers/userController');
 const postController = require('./controllers/postController');
+const authController = require('./controllers/authController');
 
 const app = express();
 app.use(cors());
@@ -17,3 +19,4 @@ app.get('/', (request, response) => {
 
 app.use('/user', userController);
 app.use('/post', postController);
+app.use('/login', authController);
