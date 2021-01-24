@@ -6,6 +6,7 @@ const { generateJwt } = require("../token")
 const createUser = (userRepository, jwtService) => async (displayName, email, password, image) => {
   const userData = { displayName, email: email?.toLowerCase() ?? undefined, password, image };
   const validationResult = validate(userData, userValidations)
+
   if (validationResult !== undefined)
     return generateResponseUsingValidation(validationResult);
 
@@ -35,12 +36,12 @@ const userExists = (userRepository) => async (email, password) => {
 const userValidations = {
   displayName: {
     presence: { message: '"displayName" is required' },
-    length: { minimum: 8, message: '"displayName" length must be at least 8 characteres long' },
+    length: { minimum: 8, message: '"displayName" length must be at least 8 characters long' },
   },
   email: { presence: { message: '"email" is required' }, email: { message: '"email" must be a valid email' } },
   password: {
     presence: { message: '"password" is required' },
-    length: { minimum: 6, message: '"password" length must be at least 6 characteres long' },
+    length: { minimum: 6, message: '"password" length must be 6 characters long' },
   },
 };
 
