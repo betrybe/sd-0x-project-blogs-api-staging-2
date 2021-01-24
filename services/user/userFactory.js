@@ -7,7 +7,8 @@ const generateInstance = () => {
   return {
     userExists: userService.userExists(userRepository),
     createUser: userService.createUser(userRepository, jwtService),
-    getUserbyId: userService.getUserbyId(userRepository)
+    getUserbyId: userService.getUserbyId(userRepository),
+    getAllUsers: userService.getAllUsers(userRepository)
   };
 };
 

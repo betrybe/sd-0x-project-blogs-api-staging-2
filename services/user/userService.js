@@ -19,6 +19,11 @@ const createUser = (userRepository, jwtService) => async (displayName, email, pa
   }
 };
 
+const getAllUsers = (userRepository) => async () => {
+  const users = await userRepository.findAll({ attributes: { exclude: ['password'] } });
+  return generateResponse(true, users);
+}
+
 const getUserbyId = (userRepository) => async (userId) => {
   if (isNaN(userId))
     return generateResponse(false, { message: 'Usuário não existe' });
@@ -29,8 +34,6 @@ const getUserbyId = (userRepository) => async (userId) => {
   return generateResponse(true, user);
 
 }
-
-
 
 const userExists = (userRepository) => async (email, password) => {
   const user = await userRepository.findOne({
@@ -57,4 +60,4 @@ const userValidations = {
   },
 };
 
-module.exports = { userExists, createUser, getUserbyId };
+module.exports = { userExists, createUser, getUserbyId, getAllUsers };

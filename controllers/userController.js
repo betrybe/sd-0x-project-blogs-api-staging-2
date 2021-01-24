@@ -23,6 +23,14 @@ router.post('/', async (req, res) => {
   }
 });
 
+
+router.get('/', authMiddleware, async (req, res) => {
+  const userService = userFactory.generateInstance();
+  const usersResponse = await userService.getAllUsers();
+  return res.status(StatusCodes.OK).json(usersResponse.content);
+
+});
+
 router.get('/:id', authMiddleware, async (req, res) => {
   const userService = userFactory.generateInstance();
   const userId = req.params.id;
