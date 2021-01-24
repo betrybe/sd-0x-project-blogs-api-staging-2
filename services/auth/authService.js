@@ -1,28 +1,16 @@
-const jwt = require('jsonwebtoken');
+const generateResponse = require("../shared/serviceResponse")
 
-const TOKEN_SECRET = process.env.TOKEN_SECRET || 'VF^6e7k2^5N@';
-
-const authenticateUser = (userService) => async (email, password) => {
+const authenticateUser = (userService, jwtService) => async (email, password) => {
   const validationErros = validateLoginIputs(email, password);
   if (validationErros.length !== 0) return generateResponse(false, { message: validationErros });
 
   const loginAndPasswordAreCorrect = await userService.userExists(email, password);
   if (loginAndPasswordAreCorrect) {
-    return generateResponse(true, { token: generateJwt('', '') });
+    return generateResponse(true, { token: jwtService.generateJwt('', '') });
   }
   return generateResponse(false, { message: 'Campos inválidos' });
 };
 
-const generateJwt = (userId, name) => jwt.sign({ userId, name }, TOKEN_SECRET, { expiresIn: '1800s' });
-
-const tokenIsValid = (token) => {
-  try {
-    jwt.verify(token, TOKEN_SECRET);
-    return true;
-  } catch (error) {
-    return false;
-  }
-};
 
 const validateLoginIputs = (email, password) => {
   const errors = [];
@@ -38,6 +26,4 @@ const validateLoginIputs = (email, password) => {
   return errors;
 };
 
-const generateResponse = (success, content) => ({ success, content });
-
-module.exports = { authenticateUser, tokenIsValid };
+module.exports = { authenticateUser };

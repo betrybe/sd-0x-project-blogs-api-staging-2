@@ -5,6 +5,7 @@ const generateInstance = () => {
   const userRepository = User;
   return {
     userExists: userService.userExists(userRepository),
+    createUser: userService.createUser(userRepository, )
   };
 };
 

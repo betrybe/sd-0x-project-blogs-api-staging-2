@@ -1,9 +1,7 @@
 const { StatusCodes } = require('http-status-codes');
-const authFacotry = require('../services/auth/authFacotory');
-
+const { tokenIsValid } = require("../services/token")
 const authMiddleware = (request, response, next) => {
   const token = request.headers.authorization;
-  const { tokenIsValid } = authFacotry.generateInstance();
 
   if (tokenIsValid(token) === true) return next();
 
