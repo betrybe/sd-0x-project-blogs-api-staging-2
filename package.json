@@ -13,7 +13,8 @@
     "pino": "^6.11.0",
     "pino-pretty": "^4.3.0",
     "sequelize": "^6.3.4",
-    "shelljs": "^0.8.4"
+    "shelljs": "^0.8.4",
+    "validate.js": "^0.13.1"
   },
   "scripts": {
     "prestart": "npx sequelize-cli db:create && npx sequelize-cli db:migrate $",

@@ -1,4 +1,4 @@
-const generateResponse = require('../shared/serviceResponse');
+const {generateResponse} = require('../shared/serviceResponse');
 
 const authenticateUser = (userService, jwtService) => async (email, password) => {
   const validationErros = validateLoginIputs(email, password);
@@ -13,7 +13,7 @@ const authenticateUser = (userService, jwtService) => async (email, password) =>
 
 const validateLoginIputs = (email, password) => {
   const errors = [];
-
+  // TODO: Refatorar com o Validate.JS
   if (email === undefined) errors.push('"email" is required');
 
   if (email === '') errors.push('"email" is not allowed to be empty');
