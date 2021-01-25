@@ -1,10 +1,8 @@
-const userService = require('./userService');
-const jwtService = require('../token');
-const { Post } = require('../../models');
+const { BlogPost } = require('../../models');
 const postService = require('./postService');
 
 const generateInstance = () => {
-  const postRepository = Post;
+  const postRepository = BlogPost;
 
   return {
     createPost: postService.createPost(postRepository),
