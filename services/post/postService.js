@@ -5,7 +5,7 @@ const createPost = (postRepository) => async (title, content, userId) => {
     const post = {
         content,
         title,
-        user_id: userId,
+        userId,
         published: Date.now(),
         updated: Date.now(),
     }
@@ -15,17 +15,31 @@ const createPost = (postRepository) => async (title, content, userId) => {
     if (validationResult !== undefined) return generateResponseUsingValidation(validationResult);
     const createdPost = await postRepository.create(post)
 
-    post.userId = post.user_id;
-    delete post.user_id;
 
     return generateResponse(true, post);
 };
 
-const getAll = (postRepository) => async () => {
+const getAll = (postRepository, User) => async () => {
+    const posts = await postRepository.findAll({
+        include: [{ model: User, as: 'user', attributes: { exclude: ['password'] } }],
+    });
 
+    return generateResponse(true, posts);
 };
 
-const getById = (postRepository) => async (postId) => {
+const getById = (postRepository, User) => async (postId) => {
+
+    if (isNaN(postId))
+        return generateResponse(false, { message: "Post não existe" });
+
+    const post = await postRepository.findByPk(postId, {
+        // include: { model: User, as: 'user', attributes: { exclude: ['password'] } },
+    });
+
+    if (post === null)
+        return generateResponse(false, { message: "Post não existe" });
+
+    return generateResponse(true, post);
 };
 
 const deletePost = (postRepository) => async (postId) => { };

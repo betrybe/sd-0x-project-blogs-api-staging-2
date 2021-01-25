@@ -18,14 +18,26 @@ router.post('/', authMiddleware, async (req, res) => {
     return res.status(StatusCodes.BAD_REQUEST).json({ message: createPostResponse.content })
 });
 
-router.get('/', authMiddleware, async (req, res) => { });
+router.get('/', authMiddleware, async (req, res) => {
+    const postService = postFacotry.generateInstance();
+    const postsResponse = await postService.getAll();
+
+    return res.status(StatusCodes.OK).json(postsResponse.content);
+});
 
 router.get('/search', authMiddleware, async (req, res) => {
     const query = req.query.q;
     return res.json({ data: query }).send();
 });
 
-router.get('/:id', authMiddleware, async (req, res) => { });
+router.get('/:id', authMiddleware, async (req, res) => {
+    const postService = postFacotry.generateInstance();
+    const postId = req.params.id;
+    const postsResponse = await postService.getById(postId);
+    if (postsResponse.success === true)
+        return res.status(StatusCodes.OK).json(postsResponse.content);
+    return res.status(StatusCodes.NOT_FOUND).json(postsResponse.content)
+});
 
 router.put('/:id', authMiddleware, async (req, res) => { });
 
