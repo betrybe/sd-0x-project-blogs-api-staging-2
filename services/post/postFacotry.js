@@ -9,6 +9,7 @@ const generateInstance = () => {
     getAll: postService.getAll(postRepository, User),
     getById: postService.getById(postRepository, User),
     deletePost: postService.deletePost(postRepository),
+    search: postService.search(postRepository),
   };
 };
 

@@ -1,5 +1,7 @@
 const validate = require('validate.js');
+const { Op } = require('sequelize')
 const { generateResponse, generateResponseUsingValidation } = require('../shared/serviceResponse');
+const { User } = require('../../models')
 
 const createPost = (postRepository) => async (title, content, userId) => {
     const post = {
@@ -42,6 +44,22 @@ const getById = (postRepository, User) => async (postId) => {
     return generateResponse(true, post);
 };
 
+const search = (postRepository) => async (text) => {
+    console.log(postRepository);
+    const posts = await postRepository.findAll({
+        where: {
+            [Op.or]: [
+                { title: text },
+                { content: text }
+            ]
+        },
+        include: { model: User, as: 'user', attributes: { exclude: ['password'] } }
+    });
+    console.log(posts)
+
+    return generateResponse(true, posts);
+}
+
 const deletePost = (postRepository) => async (postId) => { };
 
 
@@ -50,4 +68,4 @@ const postValidations = {
     content: { presence: { message: '"content" is required' } },
 };
 
-module.exports = { createPost, getAll, getById, deletePost };
+module.exports = { createPost, getAll, getById, deletePost, search };
