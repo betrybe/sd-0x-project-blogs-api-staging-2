@@ -33,7 +33,7 @@ const getById = (postRepository, User) => async (postId) => {
         return generateResponse(false, { message: "Post não existe" });
 
     const post = await postRepository.findByPk(postId, {
-        // include: { model: User, as: 'user', attributes: { exclude: ['password'] } },
+        include: { model: User, as: 'user', attributes: { exclude: ['password'] } },
     });
 
     if (post === null)
