@@ -1,10 +1,11 @@
 const express = require('express');
+
 const router = express.Router();
 const { StatusCodes } = require('http-status-codes');
 const userFactory = require('../services/user/userFactory');
 const logger = require('../server/logger');
 const authMiddleware = require('../middlewares/authMiddleware');
-const { getUserId } = require('../services/token')
+const { getUserId } = require('../services/token');
 
 router.post('/', async (req, res) => {
   try {
@@ -13,8 +14,7 @@ router.post('/', async (req, res) => {
     const response = await userService.createUser(displayName, email, password, image);
 
     if (response.success === true) return res.status(StatusCodes.CREATED).json({ token: response.content });
-    if (response.content === "Usuário já existe")
-      return res.status(StatusCodes.CONFLICT).json({ message: response.content });
+    if (response.content === 'Usuário já existe') return res.status(StatusCodes.CONFLICT).json({ message: response.content });
 
     return res.status(StatusCodes.BAD_REQUEST).json({ message: response.content });
   } catch (error) {
@@ -23,31 +23,27 @@ router.post('/', async (req, res) => {
   }
 });
 
-
 router.get('/', authMiddleware, async (req, res) => {
   const userService = userFactory.generateInstance();
   const usersResponse = await userService.getAllUsers();
   return res.status(StatusCodes.OK).json(usersResponse.content);
-
 });
 
 router.get('/:id', authMiddleware, async (req, res) => {
   const userService = userFactory.generateInstance();
   const userId = req.params.id;
   const userResponse = await await userService.getUserbyId(userId);
-  if (userResponse.success === true)
-    return res.status(StatusCodes.OK).json(userResponse.content);
+  if (userResponse.success === true) return res.status(StatusCodes.OK).json(userResponse.content);
   return res.status(StatusCodes.NOT_FOUND).json(userResponse.content);
+});
 
-})
-
-router.delete("/me", authMiddleware, async (req, res) => {
+router.delete('/me', authMiddleware, async (req, res) => {
   const userService = userFactory.generateInstance();
   const token = req.headers.authorization;
   const userId = getUserId(token);
-  await userService.deleteUser(userId)
+  await userService.deleteUser(userId);
 
   res.status(StatusCodes.NO_CONTENT).send();
-})
+});
 
 module.exports = router;

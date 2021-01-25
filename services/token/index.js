@@ -16,6 +16,6 @@ const tokenIsValid = (token) => {
 const getUserId = (token) => {
   const decodedToken = jwt.decode(token);
   return decodedToken.userId;
-}
+};
 
 module.exports = { generateJwt, tokenIsValid, getUserId };

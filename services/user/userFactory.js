@@ -9,7 +9,7 @@ const generateInstance = () => {
     createUser: userService.createUser(userRepository, jwtService),
     getUserbyId: userService.getUserbyId(userRepository),
     getAllUsers: userService.getAllUsers(userRepository),
-    deleteUser: userService.deleteUser(userRepository)
+    deleteUser: userService.deleteUser(userRepository),
   };
 };
 

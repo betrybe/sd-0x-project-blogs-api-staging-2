@@ -1,10 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const configureValidateJs = require("./server/validations")
+const configureValidateJs = require('./server/validations');
 const userController = require('./controllers/userController');
 const postController = require('./controllers/postController');
 const authController = require('./controllers/authController');
+
 configureValidateJs();
 
 const app = express();

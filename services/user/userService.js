@@ -4,17 +4,15 @@ const { generateResponse, generateResponseUsingValidation } = require('../shared
 
 const createUser = (userRepository, jwtService) => async (displayName, email, password, image) => {
   const userData = { displayName, email: email?.toLowerCase() ?? undefined, password, image };
-  const validationResult = validate(userData, userValidations)
+  const validationResult = validate(userData, userValidations);
 
-  if (validationResult !== undefined)
-    return generateResponseUsingValidation(validationResult);
+  if (validationResult !== undefined) return generateResponseUsingValidation(validationResult);
 
   try {
     const user = await userRepository.create(userData);
     return generateResponse(true, jwtService.generateJwt(user.id, user.displayName));
   } catch (error) {
-    if (error.name === 'SequelizeUniqueConstraintError')
-      return generateResponse(false, 'Usuário já existe');
+    if (error.name === 'SequelizeUniqueConstraintError') return generateResponse(false, 'Usuário já existe');
     throw error;
   }
 };
@@ -22,33 +20,28 @@ const createUser = (userRepository, jwtService) => async (displayName, email, pa
 const getAllUsers = (userRepository) => async () => {
   const users = await userRepository.findAll({ attributes: { exclude: ['password'] } });
   return generateResponse(true, users);
-}
+};
 
 const getUserbyId = (userRepository) => async (userId) => {
-  if (isNaN(userId))
-    return generateResponse(false, { message: 'Usuário não existe' });
+  if (isNaN(userId)) return generateResponse(false, { message: 'Usuário não existe' });
 
   const user = await userRepository.findOne({ where: { id: Number(userId) }, attributes: { exclude: ['password'] } });
-  if (user === null)
-    return generateResponse(false, { message: 'Usuário não existe' });
+  if (user === null) return generateResponse(false, { message: 'Usuário não existe' });
   return generateResponse(true, user);
-
-}
-
-const userExists = (userRepository) => async (email, password) => {
-  return await userRepository.findOne({
-    where: {
-      [Op.and]: [
-        { email: email.toLowerCase() },
-        { password },
-      ],
-    },
-  });
 };
+
+const userExists = (userRepository) => async (email, password) => await userRepository.findOne({
+  where: {
+    [Op.and]: [
+      { email: email.toLowerCase() },
+      { password },
+    ],
+  },
+});
 
 const deleteUser = (userRepository) => async (userId) => {
   await userRepository.destroy({ where: { id: userId } });
-}
+};
 
 const userValidations = {
   displayName: {
