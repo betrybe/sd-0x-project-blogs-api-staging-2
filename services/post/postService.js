@@ -13,13 +13,12 @@ const createPost = (postRepository) => async (title, content, userId) => {
     const validationResult = validate(post, postValidations);
 
     if (validationResult !== undefined) return generateResponseUsingValidation(validationResult);
-
-    console.log("--------------------------------")
-    console.log(validationResult)
-    console.log("--------------------------------")
     const createdPost = await postRepository.create(post)
 
-    return generateResponse(true, createPost);
+    post.userId = post.user_id;
+    delete post.user_id;
+
+    return generateResponse(true, post);
 };
 
 const getAll = (postRepository) => async () => {
