@@ -1,9 +1,10 @@
 const express = require('express');
+
 const router = express.Router();
 const { StatusCodes } = require('http-status-codes');
 const { getUserId } = require('../services/token');
 const authMiddleware = require('../middlewares/authMiddleware');
-const postFacotry = require('../services/post/postFacotry')
+const postFacotry = require('../services/post/postFacotry');
 
 router.post('/', authMiddleware, async (req, res) => {
     const postService = postFacotry.generateInstance();
@@ -12,10 +13,9 @@ router.post('/', authMiddleware, async (req, res) => {
 
     const createPostResponse = await postService.createPost(title, content, userId);
 
-    if (createPostResponse.success === true)
-        return res.status(StatusCodes.CREATED).json(createPostResponse.content);
+    if (createPostResponse.success === true) return res.status(StatusCodes.CREATED).json(createPostResponse.content);
 
-    return res.status(StatusCodes.BAD_REQUEST).json({ message: createPostResponse.content })
+    return res.status(StatusCodes.BAD_REQUEST).json({ message: createPostResponse.content });
 });
 
 router.get('/', authMiddleware, async (req, res) => {
@@ -30,20 +30,30 @@ router.get('/search', authMiddleware, async (req, res) => {
     const query = req.query.q;
     const searchResponse = await postService.search(query);
     return res.status(StatusCodes.OK).json(searchResponse.content);
-
 });
 
 router.get('/:id', authMiddleware, async (req, res) => {
     const postService = postFacotry.generateInstance();
     const postId = req.params.id;
     const postsResponse = await postService.getById(postId);
-    if (postsResponse.success === true)
-        return res.status(StatusCodes.OK).json(postsResponse.content);
-    return res.status(StatusCodes.NOT_FOUND).json(postsResponse.content)
+    if (postsResponse.success === true) return res.status(StatusCodes.OK).json(postsResponse.content);
+    return res.status(StatusCodes.NOT_FOUND).json(postsResponse.content);
 });
 
 router.put('/:id', authMiddleware, async (req, res) => { });
 
-router.delete('/:id', authMiddleware, async (req, res) => { });
+router.delete('/:id', authMiddleware, async (req, res) => {
+    const postService = postFacotry.generateInstance();
+    const postId = req.params.id;
+    const userId = getUserId(req.headers.authorization);
+
+    const deleteResponse = await postService.deletePost(postId, userId);
+
+    if (deleteResponse.success === true) return res.status(StatusCodes.NO_CONTENT).send();
+
+    if (deleteResponse.content === 'unauthorized') return res.status(StatusCodes.UNAUTHORIZED).send({ message: 'Usuário não autorizado' });
+
+    return res.status(StatusCodes.NOT_FOUND).json({ message: 'Post não existe' }).send();
+});
 
 module.exports = router;
