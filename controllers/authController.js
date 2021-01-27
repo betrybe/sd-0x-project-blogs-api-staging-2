@@ -12,7 +12,8 @@ router.post('/', async (req, res) => {
 
   if (authResponse.success === true) return res.status(StatusCodes.OK).json(authResponse.content);
 
-  const responseError = authResponse.content.message.length === 1 ? authResponse.content.message[0] : authResponse.content.message;
+  const responseError = authResponse.content.message.length === 1
+    ? authResponse.content.message[0] : authResponse.content.message;
   return res.status(StatusCodes.BAD_REQUEST).json({ message: responseError });
 });
 

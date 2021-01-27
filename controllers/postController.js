@@ -13,7 +13,9 @@ router.post('/', authMiddleware, async (req, res) => {
 
   const createPostResponse = await postService.createPost(title, content, userId);
 
-  if (createPostResponse.success === true) return res.status(StatusCodes.CREATED).json(createPostResponse.content);
+  if (createPostResponse.success === true) {
+    return res.status(StatusCodes.CREATED).json(createPostResponse.content);
+  }
 
   return res.status(StatusCodes.BAD_REQUEST).json({ message: createPostResponse.content });
 });
