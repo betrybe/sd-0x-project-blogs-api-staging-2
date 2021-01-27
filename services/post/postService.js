@@ -41,15 +41,16 @@ const getById = (postRepository, User) => async (postId) => {
 };
 
 const search = (postRepository, User) => async (text) => {
-  const filter = { include: { model: User, as: 'user', attributes: { exclude: ['password'] } }, };
-  
-  if (text !== '')
+  const filter = { include: { model: User, as: 'user', attributes: { exclude: ['password'] } } };
+
+  if (text !== '') {
     filter.where = {
       [Op.or]: [
         { title: text },
         { content: text },
       ],
-    }
+    };
+  }
 
   const posts = await postRepository.findAll(filter);
   return generateResponse(true, posts);

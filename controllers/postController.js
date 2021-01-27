@@ -28,7 +28,7 @@ router.get('/', authMiddleware, async (req, res) => {
 router.get('/search', authMiddleware, async (req, res) => {
   const postService = postFacotry.generateInstance();
   const query = req.query.q;
-  
+
   const searchResponse = await postService.search(query);
   return res.status(StatusCodes.OK).json(searchResponse.content);
 });
