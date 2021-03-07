@@ -1,10 +1,32 @@
 const express = require('express');
+const { Op } = require('sequelize');
 const { User, Post } = require('../models');
 const validationInputs = require('../middlewares/validationInputs');
 const validationToken = require('../middlewares/validationToken');
 const validationOwner = require('../middlewares/validationOwner');
 
 const router = express.Router();
+
+router.get('/search',
+  validationToken.hasToken,
+  async (req, res) => {
+    try {
+      const posts = await Post.findAll({
+        where: {
+          [Op.or]: [
+            { title: { [Op.like]: `%${req.query.q}%` } },
+            { content: { [Op.like]: `%${req.query.q}%` } },
+          ],
+        },
+        include: [{ model: User, as: 'user', attributes: { exclude: ['password'] } }],
+        attributes: { exclude: ['userId'] },
+      });
+
+      return res.status(200).json(posts);
+    } catch (error) {
+      res.status(500).send({ message: `FATAL ERROR 500: ${error}` });
+    }
+  });
 
 router.post('/',
   validationToken.hasToken,
