@@ -1,4 +1,4 @@
-const verifyEmail = require('../helpers/verifyEmail');
+const verifyEmail = require('../helpers/verifyClient');
 
 const responseError = (res, code, message) => res.status(code).json({ message });
 
@@ -50,9 +50,27 @@ const hasPassword = (req, res, next) => {
   return next();
 };
 
+const hasTitle = (req, res, next) => {
+  if (!req.body.title) {
+    return responseError(res, 400, '"title" is required');
+  }
+
+  return next();
+};
+
+const hasContent = (req, res, next) => {
+  if (!req.body.content) {
+    return responseError(res, 400, '"content" is required');
+  }
+
+  return next();
+};
+
 module.exports = {
   hasDisplayName,
   hasEmail,
   hasPassword,
   existsEmail,
+  hasTitle,
+  hasContent,
 };

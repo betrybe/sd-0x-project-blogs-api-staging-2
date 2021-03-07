@@ -13,7 +13,8 @@ router.post('/',
       const user = await User.findOne({ where: req.body });
 
       if (user) {
-        const token = authJWT.createToken(req.body);
+        const payloadForToken = { ...req.body, id: user.dataValues.id };
+        const token = authJWT.createToken(payloadForToken);
         return res.status(200).json({ token });
       }
 
